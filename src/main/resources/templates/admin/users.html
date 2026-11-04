@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${title}">User Management</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 th:text="${title}">User Management</h1>
+                <a th:href="@{/admin/users/new}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create User
+                </a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">User Statistics</h5>
+                    <div class="row">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="card text-white bg-primary">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-people" style="font-size: 2rem;"></i>
+                                    <h3 class="mt-2" th:text="${users.size()}">0</h3>
+                                    <p class="mb-0">Total Users</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="card text-white bg-success">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-person-check" style="font-size: 2rem;"></i>
+                                    <h3 class="mt-2" th:text="${#lists.size(users) - #lists.size(users) + 1}">0</h3>
+                                    <p class="mb-0">Active</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="card text-white bg-warning">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-person-x" style="font-size: 2rem;"></i>
+                                    <h3 class="mt-2">0</h3>
+                                    <p class="mb-0">Inactive</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="card text-white bg-info">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-person-workspace" style="font-size: 2rem;"></i>
+                                    <h3 class="mt-2">0</h3>
+                                    <p class="mb-0">Agents</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user : ${users}">
+                                    <td th:text="${user.id}"></td>
+                                    <td th:text="${user.username}"></td>
+                                    <td th:text="${user.getFullName()}"></td>
+                                    <td th:text="${user.email}"></td>
+                                    <td>
+                                        <span th:class="${'badge bg-' + (user.role == 'USER' ? 'secondary' : user.role == 'AGENT' ? 'info' : user.role == 'ADMIN' ? 'danger' : 'secondary')}"
+                                              th:text="${user.role}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:if="${user.active}" class="badge bg-success">Active</span>
+                                        <span th:if="${!user.active}" class="badge bg-danger">Inactive</span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form th:action="@{/admin/users/{id}/toggle-status(id=${user.id})}" 
+                                              method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                                <i th:if="${user.active}" class="bi bi-person-x"></i>
+                                                <i th:if="${!user.active}" class="bi bi-person-check"></i>
+                                            </button>
+                                        </form>
+                                        <form th:if="${user.id != #authentication.principal.getUser().id}" 
+                                              th:action="@{/admin/users/{id}/delete(id=${user.id})}" 
+                                              method="post" class="d-inline" 
+                                              onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr th:if="${users.empty}">
+                                    <td colspan="7" class="text-center text-muted">
+                                        No users found
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

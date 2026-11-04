@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${title}">My Tickets</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 th:text="${title}">My Tickets</h1>
+                <a th:href="@{/tickets/new}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create Ticket
+                </a>
+            </div>
+
+            <div class="mb-4" th:if="${isAgent}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Quick Actions</h5>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/agent/tickets}" class="btn btn-outline-primary">
+                                <i class="bi bi-ticket-perforated"></i> All Tickets
+                            </a>
+                            <a th:href="@{/agent/tickets/assigned}" class="btn btn-outline-primary">
+                                <i class="bi bi-person-check"></i> My Assigned
+                            </a>
+                            <a th:href="@{/agent/tickets/unassigned}" class="btn btn-outline-secondary">
+                                <i class="bi bi-ticket-detailed"></i> Unassigned
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ticket : ${tickets}">
+                                    <td th:text="${ticket.id}"></td>
+                                    <td>
+                                        <a th:href="@{/tickets/{id}(id=${ticket.id})}" th:text="${ticket.title}"></a>
+                                    </td>
+                                    <td>
+                                        <span th:class="${'badge bg-' + ticket.status.name().toLowerCase()}"
+                                              th:text="${ticket.status}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:class="${'badge bg-' + (ticket.priority == 'LOW' ? 'success' : ticket.priority == 'MEDIUM' ? 'warning' : ticket.priority == 'HIGH' ? 'danger' : 'dark')}"
+                                              th:text="${ticket.priority}"></span>
+                                    </td>
+                                    <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                                    <td>
+                                        <a th:href="@{/tickets/{id}(id=${ticket.id})}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:if="${!isAgent}" 
+                                           th:href="@{/tickets/{id}/edit(id=${ticket.id})}" 
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${tickets.empty}">
+                                    <td colspan="6" class="text-center text-muted">
+                                        No tickets found
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

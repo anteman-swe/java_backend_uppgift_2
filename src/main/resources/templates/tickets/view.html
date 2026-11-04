@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${title}">Ticket Details</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h2 th:text="${ticket.title}"></h2>
+                            <span th:class="${'badge bg-' + ticket.status.name().toLowerCase()}"
+                                  th:text="${ticket.status}"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex gap-3 mb-3">
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-person"></i> 
+                                    <span th:text="${ticket.createdBy.getFullName()}"></span>
+                                </span>
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-calendar"></i> 
+                                    <span th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                                </span>
+                                <span class="badge bg-secondary" th:if="${ticket.category}">
+                                    <i class="bi bi-tag"></i> 
+                                    <span th:text="${ticket.category}"></span>
+                                </span>
+                                <span th:class="${'badge bg-' + (ticket.priority == 'LOW' ? 'success' : ticket.priority == 'MEDIUM' ? 'warning' : ticket.priority == 'HIGH' ? 'danger' : 'dark')}"
+                                      th:text="${ticket.priority}"></span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Description</h5>
+                                <p th:utext="${ticket.description}"></p>
+                            </div>
+
+                            <div class="d-flex gap-2" th:if="${isOwner || isAgent || isAdmin}">
+                                <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}" 
+                                   class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <form th:action="@{/tickets/{id}/change-status(id=${ticket.id})}" method="post">
+                                    <select name="status" class="form-select form-select-sm d-inline-block w-auto">
+                                        <option th:each="status : ${statuses}" 
+                                                th:value="${status}" 
+                                                th:text="${status}"
+                                                th:selected="${ticket.status == status}"></option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-arrow-repeat"></i> Update
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Comments</h4>
+                        </div>
+                        <div class="card-body">
+                            <div th:each="comment : ${comments}" class="mb-4">
+                                <div class="d-flex gap-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+                                             style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0" th:text="${comment.user.getFullName()}"></h6>
+                                            <small class="text-muted" 
+                                                   th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                                        </div>
+                                        <p class="mb-0" th:utext="${comment.content}"></p>
+                                    </div>
+                                </div>
+                                <hr th:if="${!commentStat.last}">
+                            </div>
+
+                            <div th:if="${comments.empty}" class="text-muted text-center py-3">
+                                No comments yet
+                            </div>
+
+                            <!-- Add Comment Form -->
+                            <div th:if="${canComment}" class="mt-4">
+                                <form th:action="@{/tickets/{id}/add-comment(id=${ticket.id})}" method="post">
+                                    <div class="mb-3">
+                                        <label for="content" class="form-label">Add a comment</label>
+                                        <textarea class="form-control" id="content" name="content" 
+                                                  rows="3" placeholder="Enter your comment..." required></textarea>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-send"></i> Post Comment
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Ticket Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-5">Created By:</dt>
+                                <dd class="col-sm-7" th:text="${ticket.createdBy.getFullName()}"></dd>
+
+                                <dt class="col-sm-5">Created:</dt>
+                                <dd class="col-sm-7" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+
+                                <dt class="col-sm-5">Last Updated:</dt>
+                                <dd class="col-sm-7" th:text="${#temporals.format(ticket.lastModified, 'yyyy-MM-dd HH:mm')}"></dd>
+
+                                <dt class="col-sm-5">Assigned To:</dt>
+                                <dd class="col-sm-7">
+                                    <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
+                                    <span th:if="${!ticket.assignedTo}" class="text-muted">Unassigned</span>
+                                </dd>
+
+                                <dt class="col-sm-5">Status:</dt>
+                                <dd class="col-sm-7">
+                                    <span th:class="${'badge bg-' + ticket.status.name().toLowerCase()}"
+                                          th:text="${ticket.status}"></span>
+                                </dd>
+
+                                <dt class="col-sm-5">Priority:</dt>
+                                <dd class="col-sm-7">
+                                    <span th:class="${'badge bg-' + (ticket.priority == 'LOW' ? 'success' : ticket.priority == 'MEDIUM' ? 'warning' : ticket.priority == 'HIGH' ? 'danger' : 'dark')}"
+                                          th:text="${ticket.priority}"></span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2" th:if="${isAgent && !ticket.assignedTo}">
+                        <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-check"></i> Assign to Me
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="d-grid gap-2" th:if="${isAgent && ticket.assignedTo && ticket.assignedTo.id == #authentication.principal.getUser().id}">
+                        <form th:action="@{/agent/tickets/{id}/unassign(id=${ticket.id})}" method="post">
+                            <button type="submit" class="btn btn-outline-secondary">
+                                <i class="bi bi-person-x"></i> Unassign
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <a th:href="@{/tickets}" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-arrow-left"></i> Back to Tickets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
