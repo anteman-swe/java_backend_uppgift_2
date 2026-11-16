@@ -28,14 +28,14 @@
                 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
+                    <div th:if="${#authorization.expression('isAuthenticated()')}" class="ml-10 flex items-baseline space-x-4">
                         <a th:href="@{/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                             My Tickets
                         </a>
-                        <a th:if="${isAgent}" th:href="@{/agent/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
+                        <a th:if="${#authorization.expression('hasRole(''AGENT'')')}" th:href="@{/agent/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                             All Tickets
                         </a>
-                        <a th:if="${isAdmin}" th:href="@{/admin/users}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
+                        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                             Users
                         </a>
                     </div>
@@ -43,11 +43,11 @@
                 
                 <!-- Authentication Links -->
                 <div class="hidden md:block">
-                    <div class="ml-4 flex items-center md:ml-6">
+                    <div th:if="${#authorization.expression('isAuthenticated()')}" class="ml-4 flex items-center md:ml-6">
                         <div class="relative">
                             <button type="button" class="flex items-center space-x-2 bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button">
                                 <i class="fas fa-user-circle"></i>
-<!--                                <span th:text="${#authentication.principal.getUser().getUsername}"></span>-->
+<!--                                <span th:text="${#authentication.principal.getUser().getUsername()}"></span>-->
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             
@@ -89,13 +89,13 @@
                 <a th:href="@{/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     My Tickets
                 </a>
-                <a th:if="${isAgent}" th:href="@{/agent/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
+                <a th:if="${#authorization.expression('hasRole(''AGENT'')')}" th:href="@{/agent/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     All Tickets
                 </a>
-                <a th:if="${isAdmin}" th:href="@{/admin/users}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
+                <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     Users
                 </a>
-                <div th:if="${#authentication.principal != null}" class="border-t border-gray-700 pt-4">
+<!--                <div th:if="${#authentication.principal != null}" class="border-t border-gray-700 pt-4">-->
                     <div class="px-3 py-2 text-sm text-gray-400">
                         <i class="fas fa-user mr-2"></i>
 <!--                        <span th:text="${#authentication.principal.getUser().getFullName()}"></span>-->

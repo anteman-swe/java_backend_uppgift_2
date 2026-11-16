@@ -30,13 +30,13 @@ public class SecurityConfig {
                 
                 // USER pages
                 .requestMatchers("/tickets/new", "/tickets/{id}").authenticated()
-                .requestMatchers("/tickets/{id}/add-comment", "/tickets").authenticated()
+                .requestMatchers("/tickets/{id}/add-comment").authenticated()
                 
                 // AGENT pages
-                .requestMatchers("/agent/**").hasAnyAuthority("AGENT", "ADMIN")
+                .requestMatchers("/agent/**").hasAnyRole("AGENT", "ADMIN")
                 
                 // ADMIN pages
-                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 
                 // All other requests need authentication
                 .anyRequest().authenticated()
