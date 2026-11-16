@@ -22,7 +22,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws SecurityException {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 // Public pages
@@ -30,13 +30,13 @@ public class SecurityConfig {
                 
                 // USER pages
                 .requestMatchers("/tickets/new", "/tickets/{id}").authenticated()
-                .requestMatchers("/tickets/{id}/add-comment").authenticated()
+                .requestMatchers("/tickets/{id}/add-comment", "/tickets").authenticated()
                 
                 // AGENT pages
-                .requestMatchers("/agent/**").hasAnyRole("AGENT", "ADMIN")
+                .requestMatchers("/agent/**").hasAnyAuthority("AGENT", "ADMIN")
                 
                 // ADMIN pages
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 
                 // All other requests need authentication
                 .anyRequest().authenticated()

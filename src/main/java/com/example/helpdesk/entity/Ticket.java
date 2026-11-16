@@ -79,9 +79,4 @@ public class Ticket {
         comments.remove(comment);
         comment.setTicket(null);
     }
-
-    @Override
-    public String toString() {
-        return "Ticket{id=" + id + ", title='" + title + "', status=" + status + "}";
-    }
 }
