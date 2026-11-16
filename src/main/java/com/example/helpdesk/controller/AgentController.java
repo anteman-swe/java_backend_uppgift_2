@@ -12,7 +12,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/agent")
 public class AgentController extends BaseController {
-
+    static final String TICKETS = "tickets";
+    static final String TITLE = "title";
     private final TicketService ticketService;
 
     public AgentController(UserService userService, TicketService ticketService) {
@@ -23,10 +24,10 @@ public class AgentController extends BaseController {
     @GetMapping("/tickets")
     public String listAllTickets(Model model) {
         List<Ticket> tickets = ticketService.getAllTickets();
-        
+
         addCommonAttributes(model);
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("title", "All Tickets");
+        model.addAttribute(TICKETS, tickets);
+        model.addAttribute(TITLE, "All Tickets");
         
         // Statistics
         model.addAttribute("newCount", ticketService.countTicketsByStatus(Ticket.Status.NEW));
@@ -35,7 +36,7 @@ public class AgentController extends BaseController {
         model.addAttribute("resolvedCount", ticketService.countTicketsByStatus(Ticket.Status.RESOLVED));
         model.addAttribute("closedCount", ticketService.countTicketsByStatus(Ticket.Status.CLOSED));
         model.addAttribute("assignedCount", ticketService.countAssignedTickets());
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "agent/tickets";
     }
@@ -45,10 +46,10 @@ public class AgentController extends BaseController {
         List<Ticket> tickets = ticketService.getTicketsByStatus(Ticket.Status.NEW);
         
         addCommonAttributes(model);
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("title", "New Tickets");
+        model.addAttribute(TICKETS, tickets);
+        model.addAttribute(TITLE, "New Tickets");
         model.addAttribute("status", "NEW");
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "agent/tickets-by-status";
     }
@@ -58,10 +59,10 @@ public class AgentController extends BaseController {
         List<Ticket> tickets = ticketService.getTicketsByStatus(Ticket.Status.IN_PROGRESS);
         
         addCommonAttributes(model);
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("title", "In Progress Tickets");
+        model.addAttribute(TICKETS, tickets);
+        model.addAttribute(TITLE, "In Progress Tickets");
         model.addAttribute("status", "IN_PROGRESS");
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "agent/tickets-by-status";
     }
@@ -71,9 +72,9 @@ public class AgentController extends BaseController {
         List<Ticket> tickets = ticketService.getAssignedTickets();
         
         addCommonAttributes(model);
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("title", "My Assigned Tickets");
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute(TICKETS, tickets);
+        model.addAttribute(TITLE, "My Assigned Tickets");
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "agent/assigned-tickets";
     }
@@ -83,9 +84,9 @@ public class AgentController extends BaseController {
         List<Ticket> tickets = ticketService.getUnassignedTickets();
         
         addCommonAttributes(model);
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("title", "Unassigned Tickets");
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute(TICKETS, tickets);
+        model.addAttribute(TITLE, "Unassigned Tickets");
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "agent/unassigned-tickets";
     }

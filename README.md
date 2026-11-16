@@ -62,9 +62,11 @@ helpdesk/
 ## Quick Start
 
 ### Prerequisites
-- Java 17 or later
+- Java 25 or later
 - Maven 3.8.6 or later
-- Docker and Docker Compose
+- Docker and Docker Compose  
+  *or* 
+- Podman and Podman Compose (podman-compose)
 
 ### Option 1: Run with Docker Compose (Recommended)
 
@@ -267,7 +269,7 @@ spring.security.user.roles=ADMIN
 
 ### Docker Configuration
 
-Edit `docker-compose.yml` to change database settings:
+Edit `compose.yml` to change database settings:
 
 ```yaml
 services:

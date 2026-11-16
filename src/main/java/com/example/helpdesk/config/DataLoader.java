@@ -4,12 +4,14 @@ import com.example.helpdesk.entity.Ticket;
 import com.example.helpdesk.entity.User;
 import com.example.helpdesk.repository.TicketRepository;
 import com.example.helpdesk.repository.UserRepository;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.logging.Logger;
+
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -27,7 +29,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String @NonNull ... args) throws Exception {
         // Only load data if database is empty
         if (userRepository.count() == 0) {
             // Create ADMIN user
@@ -112,12 +114,12 @@ public class DataLoader implements CommandLineRunner {
                     .createdAt(LocalDateTime.now().minusHours(5))
                     .build();
             ticketRepository.save(ticket3);
-
-            System.out.println("Sample data loaded successfully!");
-            System.out.println("Admin user: admin/admin123");
-            System.out.println("Agent user: agent/agent123");
-            System.out.println("User 1: user/user123");
-            System.out.println("User 2: user2/user123");
+            Logger logger = Logger.getLogger(DataLoader.class.getName());
+            logger.info("Sample data loaded successfully!");
+            logger.info("Admin user: admin/admin123");
+            logger.info("Agent user: agent/agent123");
+            logger.info("User 1: user/user123");
+            logger.info("User 2: user2/user123");
         }
     }
 }

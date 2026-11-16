@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      xml:lang="en">
+
 <head>
     <title th:text="${title}">All Tickets</title>
 </head>
@@ -115,8 +119,8 @@
                                     </td>
                                     <td th:text="${ticket.createdBy.getFullName()}"></td>
                                     <td>
-                                        <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                        <span th:if="${!ticket.assignedTo}" class="text-muted">Unassigned</span>
+                                        <span th:if="${ticket.assignedTo != null}" th:text="${ticket.assignedTo.getFullName()}"></span>
+                                        <span th:if="${ticket.assignedTo == null}" class="text-muted">Unassigned</span>
                                     </td>
                                     <td>
                                         <span th:class="${'badge bg-' + ticket.status.name().toLowerCase()}"
@@ -132,7 +136,7 @@
                                            class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <form th:if="${!ticket.assignedTo}" 
+                                        <form th:if="${ticket.assignedTo == null}" 
                                               th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post" 
                                               class="d-inline">
                                             <button type="submit" class="btn btn-sm btn-success">

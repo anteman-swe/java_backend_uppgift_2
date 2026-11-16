@@ -87,7 +87,7 @@ public class TicketController extends BaseController {
         model.addAttribute("isOwner", ticket.getCreatedBy().getId().equals(currentUser.getId()));
         model.addAttribute("newComment", new Comment());
         model.addAttribute("statuses", Ticket.Status.values());
-        model.addAttribute("getPriorityClass", this::getPriorityClass);
+        model.addAttribute("getPriorityClass", (java.util.function.Function<Ticket.Priority, String>) this::getPriorityClass);
         
         return "tickets/view";
     }

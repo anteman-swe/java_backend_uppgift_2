@@ -13,6 +13,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController extends BaseController {
+    static final String TITLE = "title";
+    static final String ROLES = "roles";
+    static final String IS_EDIT = "isEdit";
+    static final String NEW_USER = "Create New User";
 
     public AdminController(UserService userService) {
         super(userService);
@@ -24,9 +28,9 @@ public class AdminController extends BaseController {
         
         addCommonAttributes(model);
         model.addAttribute("users", users);
-        model.addAttribute("title", "User Management");
-        model.addAttribute("roles", User.Role.values());
-        model.addAttribute("getRoleClass", this::getRoleClass);
+        model.addAttribute(TITLE, "User Management");
+        model.addAttribute(ROLES, User.Role.values());
+        model.addAttribute("getRoleClass", (java.util.function.Function<User.Role, String>) this::getRoleClass);
         
         return "admin/users";
     }
@@ -35,9 +39,9 @@ public class AdminController extends BaseController {
     public String createUserForm(Model model) {
         addCommonAttributes(model);
         model.addAttribute("user", new User());
-        model.addAttribute("title", "Create New User");
-        model.addAttribute("roles", User.Role.values());
-        model.addAttribute("isEdit", false);
+        model.addAttribute(TITLE, NEW_USER);
+        model.addAttribute(ROLES, User.Role.values());
+        model.addAttribute(IS_EDIT, false);
         
         return "admin/user-form";
     }
@@ -48,9 +52,9 @@ public class AdminController extends BaseController {
                              Model model) {
         if (bindingResult.hasErrors()) {
             addCommonAttributes(model);
-            model.addAttribute("title", "Create New User");
-            model.addAttribute("roles", User.Role.values());
-            model.addAttribute("isEdit", false);
+            model.addAttribute(TITLE, NEW_USER);
+            model.addAttribute(ROLES, User.Role.values());
+            model.addAttribute(IS_EDIT, false);
             return "admin/user-form";
         }
         
@@ -59,9 +63,9 @@ public class AdminController extends BaseController {
             userService.getUserByUsername(user.getUsername());
             bindingResult.rejectValue("username", "error.user", "Username already exists");
             addCommonAttributes(model);
-            model.addAttribute("title", "Create New User");
-            model.addAttribute("roles", User.Role.values());
-            model.addAttribute("isEdit", false);
+            model.addAttribute(TITLE, NEW_USER);
+            model.addAttribute(ROLES, User.Role.values());
+            model.addAttribute(IS_EDIT, false);
             return "admin/user-form";
         } catch (RuntimeException e) {
             // Username doesn't exist, continue
@@ -72,9 +76,9 @@ public class AdminController extends BaseController {
             userService.getUserByUsername(user.getEmail());
             bindingResult.rejectValue("email", "error.user", "Email already exists");
             addCommonAttributes(model);
-            model.addAttribute("title", "Create New User");
-            model.addAttribute("roles", User.Role.values());
-            model.addAttribute("isEdit", false);
+            model.addAttribute(TITLE, NEW_USER);
+            model.addAttribute(ROLES, User.Role.values());
+            model.addAttribute(IS_EDIT, false);
             return "admin/user-form";
         } catch (RuntimeException e) {
             // Email doesn't exist, continue
@@ -91,9 +95,9 @@ public class AdminController extends BaseController {
         
         addCommonAttributes(model);
         model.addAttribute("user", user);
-        model.addAttribute("title", "Edit User");
-        model.addAttribute("roles", User.Role.values());
-        model.addAttribute("isEdit", true);
+        model.addAttribute(TITLE, "Edit User");
+        model.addAttribute(ROLES, User.Role.values());
+        model.addAttribute(IS_EDIT, true);
         
         return "admin/user-form";
     }
@@ -105,9 +109,9 @@ public class AdminController extends BaseController {
                              Model model) {
         if (bindingResult.hasErrors()) {
             addCommonAttributes(model);
-            model.addAttribute("title", "Edit User");
-            model.addAttribute("roles", User.Role.values());
-            model.addAttribute("isEdit", true);
+            model.addAttribute(TITLE, "Edit User");
+            model.addAttribute(ROLES, User.Role.values());
+            model.addAttribute(IS_EDIT, true);
             return "admin/user-form";
         }
         

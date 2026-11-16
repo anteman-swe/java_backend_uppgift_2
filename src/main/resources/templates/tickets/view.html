@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      xml:lang="en">
 <head>
     <title th:text="${title}">Ticket Details</title>
 </head>
@@ -125,8 +127,8 @@
 
                                 <dt class="col-sm-5">Assigned To:</dt>
                                 <dd class="col-sm-7">
-                                    <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                    <span th:if="${!ticket.assignedTo}" class="text-muted">Unassigned</span>
+                                    <span th:if="${ticket.assignedTo != null}" th:text="${ticket.assignedTo.getFullName()}"></span>
+                                    <span th:if="${ticket.assignedTo == null}" class="text-muted">Unassigned</span>
                                 </dd>
 
                                 <dt class="col-sm-5">Status:</dt>
@@ -144,7 +146,7 @@
                         </div>
                     </div>
 
-                    <div class="d-grid gap-2" th:if="${isAgent && !ticket.assignedTo}">
+                    <div class="d-grid gap-2" th:if="${isAgent && ticket.assignedTo == null}">
                         <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-person-check"></i> Assign to Me
@@ -152,7 +154,7 @@
                         </form>
                     </div>
 
-                    <div class="d-grid gap-2" th:if="${isAgent && ticket.assignedTo && ticket.assignedTo.id == #authentication.principal.getUser().id}">
+                    <div class="d-grid gap-2" th:if="${isAgent && ticket.assignedTo != null && ticket.assignedTo.id == #authentication.principal.getUser().id}">
                         <form th:action="@{/agent/tickets/{id}/unassign(id=${ticket.id})}" method="post">
                             <button type="submit" class="btn btn-outline-secondary">
                                 <i class="bi bi-person-x"></i> Unassign

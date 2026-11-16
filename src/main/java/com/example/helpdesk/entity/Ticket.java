@@ -30,10 +30,12 @@ public class Ticket {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Status status = Status.NEW;
 
     @Column(name = "priority", length = 20)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Priority priority = Priority.MEDIUM;
 
     @Column(name = "category", length = 50)
@@ -57,6 +59,7 @@ public class Ticket {
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @OrderBy("createdAt ASC")
+    @Builder.Default
     private Set<Comment> comments = new HashSet<>();
 
     public enum Status {

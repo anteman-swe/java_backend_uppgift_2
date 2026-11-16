@@ -95,7 +95,11 @@ public class UserService {
         
         Object principal = authentication.getPrincipal();
         if (principal instanceof CustomUserDetails) {
-            return ((CustomUserDetails) principal).getUser();
+            return ((CustomUserDetails) principal).user();
+        } else if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+            return userRepository.findByUsername(((org.springframework.security.core.userdetails.UserDetails) principal).getUsername()).orElse(null);
+        } else if (principal instanceof String && !"anonymousUser".equals(principal)) {
+            return userRepository.findByUsername((String) principal).orElse(null);
         }
         
         return null;

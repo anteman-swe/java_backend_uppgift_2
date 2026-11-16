@@ -26,9 +26,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findByCreatedByOrderByCreatedAtDesc(User createdBy);
 
+    List<Ticket> findByAssignedToOrderByCreatedAtDesc(User assignedTo);
+
+    List<Ticket> findByAssignedToIsNull();
+
     long countByStatus(Ticket.Status status);
 
     long countByCreatedBy(User createdBy);
 
     long countByAssignedTo(User assignedTo);
+
+    long countByCreatedByAndStatus(User createdBy, Ticket.Status status);
 }
