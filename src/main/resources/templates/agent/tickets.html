@@ -1,159 +1,127 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      lang="en"
-      xml:lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
 <head>
     <title th:text="${title}">All Tickets</title>
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="container">
-            <h1 th:text="${title}">All Tickets</h1>
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800" th:text="${title}">All Tickets</h1>
+        </div>
 
-            <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body text-center">
-                            <i class="bi bi-ticket-perforated" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${newCount}">0</h3>
-                            <p class="mb-0">New</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-warning">
-                        <div class="card-body text-center">
-                            <i class="bi bi-arrow-repeat" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${inProgressCount}">0</h3>
-                            <p class="mb-0">In Progress</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-info">
-                        <div class="card-body text-center">
-                            <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${waitingCount}">0</h3>
-                            <p class="mb-0">Waiting</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-success">
-                        <div class="card-body text-center">
-                            <i class="bi bi-check-circle" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${resolvedCount}">0</h3>
-                            <p class="mb-0">Resolved</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body text-center">
-                            <i class="bi bi-archive" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${closedCount}">0</h3>
-                            <p class="mb-0">Closed</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-3">
-                    <div class="card text-white bg-dark">
-                        <div class="card-body text-center">
-                            <i class="bi bi-person-check" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" th:text="${assignedCount}">0</h3>
-                            <p class="mb-0">Assigned</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+            <div class="bg-blue-500 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-ticket-alt text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${newCount}">0</h3>
+                <p class="text-sm">New</p>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Quick Actions</h5>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <a th:href="@{/agent/tickets/new}" class="btn btn-outline-primary">
-                            <i class="bi bi-ticket-perforated"></i> New Tickets
-                        </a>
-                        <a th:href="@{/agent/tickets/in-progress}" class="btn btn-outline-warning">
-                            <i class="bi bi-arrow-repeat"></i> In Progress
-                        </a>
-                        <a th:href="@{/agent/tickets/assigned}" class="btn btn-outline-info">
-                            <i class="bi bi-person-check"></i> My Assigned
-                        </a>
-                        <a th:href="@{/agent/tickets/unassigned}" class="btn btn-outline-secondary">
-                            <i class="bi bi-ticket-detailed"></i> Unassigned
-                        </a>
-                        <a th:href="@{/tickets/new}" class="btn btn-primary ms-auto">
-                            <i class="bi bi-plus-circle"></i> Create Ticket
-                        </a>
-                    </div>
-                </div>
+            <div class="bg-yellow-500 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-sync-alt text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${inProgressCount}">0</h3>
+                <p class="text-sm">In Progress</p>
             </div>
+            <div class="bg-cyan-500 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-hourglass-half text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${waitingCount}">0</h3>
+                <p class="text-sm">Waiting</p>
+            </div>
+            <div class="bg-green-500 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-check-circle text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${resolvedCount}">0</h3>
+                <p class="text-sm">Resolved</p>
+            </div>
+            <div class="bg-gray-500 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-archive text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${closedCount}">0</h3>
+                <p class="text-sm">Closed</p>
+            </div>
+            <div class="bg-gray-800 text-white rounded-lg p-4 text-center">
+                <i class="fas fa-user-check text-2xl mb-2"></i>
+                <h3 class="text-xl font-bold" th:text="${assignedCount}">0</h3>
+                <p class="text-sm">Assigned</p>
+            </div>
+        </div>
 
-            <!-- Tickets Table -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Creator</th>
-                                    <th>Assigned To</th>
-                                    <th>Status</th>
-                                    <th>Priority</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="ticket : ${tickets}">
-                                    <td th:text="${ticket.id}"></td>
-                                    <td>
-                                        <a th:href="@{/tickets/{id}(id=${ticket.id})}" th:text="${ticket.title}"></a>
-                                    </td>
-                                    <td th:text="${ticket.createdBy.getFullName()}"></td>
-                                    <td>
-                                        <span th:if="${ticket.assignedTo != null}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                        <span th:if="${ticket.assignedTo == null}" class="text-muted">Unassigned</span>
-                                    </td>
-                                    <td>
-                                        <span th:class="${'badge bg-' + ticket.status.name().toLowerCase()}"
-                                              th:text="${ticket.status}"></span>
-                                    </td>
-                                    <td>
-                                        <span th:class="${'badge bg-' + (ticket.priority == 'LOW' ? 'success' : ticket.priority == 'MEDIUM' ? 'warning' : ticket.priority == 'HIGH' ? 'danger' : 'dark')}"
-                                              th:text="${ticket.priority}"></span>
-                                    </td>
-                                    <td th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-                                    <td>
-                                        <a th:href="@{/tickets/{id}(id=${ticket.id})}" 
-                                           class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <form th:if="${ticket.assignedTo == null}" 
-                                              th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post" 
-                                              class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="bi bi-person-check"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr th:if="${tickets.empty}">
-                                    <td colspan="8" class="text-center text-muted">
-                                        No tickets found
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h5 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h5>
+            <div class="flex flex-wrap gap-2">
+                <a th:href="@{/agent/tickets/new}" class="inline-flex items-center px-3 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+                    <i class="fas fa-ticket-alt mr-1"></i> New Tickets
+                </a>
+                <a th:href="@{/agent/tickets/in-progress}" class="inline-flex items-center px-3 py-2 border border-yellow-300 text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                    <i class="fas fa-sync-alt mr-1"></i> In Progress
+                </a>
+                <a th:href="@{/agent/tickets/assigned}" class="inline-flex items-center px-3 py-2 border border-cyan-300 text-sm font-medium rounded-md text-cyan-700 bg-cyan-50 hover:bg-cyan-100 transition-colors">
+                    <i class="fas fa-user-check mr-1"></i> My Assigned
+                </a>
+                <a th:href="@{/agent/tickets/unassigned}" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-ticket mr-1"></i> Unassigned
+                </a>
+                <a th:href="@{/tickets/new}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors ml-auto">
+                    <i class="fas fa-plus-circle mr-1"></i> Create Ticket
+                </a>
+            </div>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creator</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr th:each="ticket : ${tickets}" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ticket.id}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="text-indigo-600 hover:text-indigo-900 font-medium" th:text="${ticket.title}"></a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ticket.createdBy.getFullName()}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
+                                <span th:if="${!ticket.assignedTo}" class="text-gray-500">Unassigned</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
+                                      th:text="${ticket.status}"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                      th:text="${ticket.priority}"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a th:href="@{/tickets/{id}(id=${ticket.id})}" 
+                                   class="text-indigo-600 hover:text-indigo-900 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form th:if="${!ticket.assignedTo}" 
+                                      th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post" 
+                                      class="d-inline">
+                                    <button type="submit" class="text-green-600 hover:text-green-900">
+                                        <i class="fas fa-user-check"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${tickets.empty}">
+                            <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">
+                                No tickets found
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
