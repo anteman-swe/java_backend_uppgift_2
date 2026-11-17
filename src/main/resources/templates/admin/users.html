@@ -93,7 +93,7 @@
                                 </form>
                             </td>
                         </tr>
-                        <tr th:unless="${users}">
+                        <tr th:if="${users.isEmpty()}">
                             <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                 No users found
                             </td>

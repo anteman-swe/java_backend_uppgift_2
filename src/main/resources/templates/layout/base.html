@@ -71,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-                    <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
+                    <a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                         <i class="fas fa-sign-in-alt mr-1"></i> Login
                     </a>
                 </div>
@@ -91,7 +91,7 @@
                 <a th:href="@{/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     My Tickets
                 </a>
-                <a th:if="${#authorization.expression('hasRole(''AGENT'')')}" th:href="@{/agent/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
+                <a th:if="${#authorization.expression('hasRole(''AGENT'')') || #authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/agent/tickets}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     All Tickets
                 </a>
                 <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
@@ -112,7 +112,7 @@
                         </button>
                     </form>
                 </div>
-                <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
+                <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     <i class="fas fa-sign-in-alt mr-1"></i> Login
                 </a>
             </div>
