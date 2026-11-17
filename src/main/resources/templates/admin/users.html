@@ -83,7 +83,7 @@
                                         <i th:unless="${user.active}" class="fas fa-user-check"></i>
                                     </button>
                                 </form>
-                                <form th:if="${user.id != #authentication.principal.user.id}"
+                                <form th:if="${user.id != #authentication.principal.id}"
                                       th:action="@{/admin/users/{id}/delete(id=${user.id})}" 
                                       method="post" class="inline-block" 
                                       onsubmit="return confirm('Are you sure you want to delete this user?')">

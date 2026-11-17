@@ -112,7 +112,7 @@
                         </button>
                     </form>
                 </div>
-                <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
+                <a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     <i class="fas fa-sign-in-alt mr-1"></i> Login
                 </a>
             </div>
