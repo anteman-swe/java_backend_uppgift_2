@@ -29,7 +29,6 @@ public class TicketController extends BaseController {
 
     @GetMapping
     public String listTickets(Model model) {
-        User currentUser = userService.getCurrentUser();
         List<Ticket> tickets = ticketService.getAllTickets();
         
         addCommonAttributes(model);

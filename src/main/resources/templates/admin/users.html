@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"
+      lang="en"
+      xml:lang="en">
 <head>
     <title th:text="${title}">User Management</title>
 </head>
@@ -23,17 +27,17 @@
             </div>
             <div class="bg-green-500 text-white rounded-lg p-4 text-center">
                 <i class="fas fa-user-check text-2xl mb-2"></i>
-                <h3 class="text-xl font-bold">0</h3>
+                <h3 class="text-xl font-bold" th:text="${activeCount}">0</h3>
                 <p class="text-sm">Active</p>
             </div>
             <div class="bg-yellow-500 text-white rounded-lg p-4 text-center">
                 <i class="fas fa-user-times text-2xl mb-2"></i>
-                <h3 class="text-xl font-bold">0</h3>
+                <h3 class="text-xl font-bold" th:text="${inactiveCount}">0</h3>
                 <p class="text-sm">Inactive</p>
             </div>
             <div class="bg-cyan-500 text-white rounded-lg p-4 text-center">
                 <i class="fas fa-user-cog text-2xl mb-2"></i>
-                <h3 class="text-xl font-bold">0</h3>
+                <h3 class="text-xl font-bold" th:text="${agentCount}">0</h3>
                 <p class="text-sm">Agents</p>
             </div>
         </div>
@@ -60,12 +64,12 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${user.getFullName()}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${user.email}"></td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (user.role == 'USER' ? 'bg-gray-100 text-gray-800' : user.role == 'AGENT' ? 'bg-cyan-100 text-cyan-800' : user.role == 'ADMIN' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + @formatUtils.getRoleBadgeClass(user.role)}"
                                       th:text="${user.role}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span th:if="${user.active}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                                <span th:if="${!user.active}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactive</span>
+                                <span th:unless="${user.active}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactive</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" 
@@ -76,10 +80,10 @@
                                       method="post" class="inline-block">
                                     <button type="submit" class="text-yellow-600 hover:text-yellow-900 mr-2">
                                         <i th:if="${user.active}" class="fas fa-user-times"></i>
-                                        <i th:if="${!user.active}" class="fas fa-user-check"></i>
+                                        <i th:unless="${user.active}" class="fas fa-user-check"></i>
                                     </button>
                                 </form>
-                                <form th:if="${user.id != #authentication.principal.getUser().id}" 
+                                <form th:if="${user.id != #authentication.principal.user.id}"
                                       th:action="@{/admin/users/{id}/delete(id=${user.id})}" 
                                       method="post" class="inline-block" 
                                       onsubmit="return confirm('Are you sure you want to delete this user?')">
@@ -89,7 +93,7 @@
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${users.empty}">
+                        <tr th:unless="${users}">
                             <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                 No users found
                             </td>

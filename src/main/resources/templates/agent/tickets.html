@@ -43,7 +43,7 @@
             <div class="bg-gray-800 text-white rounded-lg p-4 text-center">
                 <i class="fas fa-user-check text-2xl mb-2"></i>
                 <h3 class="text-xl font-bold" th:text="${assignedCount}">0</h3>
-                <p class="text-sm">Assigned</p>
+                <p class="text-sm">Assigned to me</p>
             </div>
         </div>
 
@@ -94,14 +94,14 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ticket.createdBy.getFullName()}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                <span th:if="${!ticket.assignedTo}" class="text-gray-500">Unassigned</span>
+                                <span th:unless="${ticket.assignedTo}" class="text-gray-500">Unassigned</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketStatusClass(ticket.status))}"
                                       th:text="${ticket.status}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
                                       th:text="${ticket.priority}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
@@ -110,16 +110,16 @@
                                    class="text-indigo-600 hover:text-indigo-900 mr-2">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <form th:if="${!ticket.assignedTo}" 
+                                <form th:unless="${ticket.assignedTo}"
                                       th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post" 
                                       class="d-inline">
-                                    <button type="submit" class="text-green-600 hover:text-green-900">
-                                        <i class="fas fa-user-check"></i>
+                                    <button type="submit" class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
+                                        <i class="fas fa-user-check mr-1"></i> Assign to Me
                                     </button>
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${tickets.empty}">
+                        <tr th:if="${tickets.isEmpty()}">
                             <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">
                                 No tickets found
                             </td>

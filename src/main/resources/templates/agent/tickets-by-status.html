@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"
+      lang="en"
+      xml:lang="en">
 <head>
     <title th:text="${title}">Tickets by Status</title>
 </head>
@@ -37,10 +41,10 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ticket.createdBy.getFullName()}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                <span th:if="${!ticket.assignedTo}" class="text-gray-500">Unassigned</span>
+                                <span th:unless="${ticket.assignedTo}" class="text-gray-500">Unassigned</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
                                       th:text="${ticket.priority}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
@@ -49,7 +53,7 @@
                                    class="text-indigo-600 hover:text-indigo-900 mr-2">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <form th:if="${!ticket.assignedTo}" 
+                                <form th:unless="${ticket.assignedTo}"
                                       th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post" 
                                       class="d-inline">
                                     <button type="submit" class="text-green-600 hover:text-green-900">
@@ -58,7 +62,7 @@
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${tickets.empty}">
+                        <tr th:if="${tickets.isEmpty()}">
                             <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                 No tickets found with status: <strong th:text="${status}"></strong>
                             </td>

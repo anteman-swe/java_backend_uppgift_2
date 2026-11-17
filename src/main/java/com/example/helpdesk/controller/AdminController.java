@@ -25,12 +25,19 @@ public class AdminController extends BaseController {
     @GetMapping("/users")
     public String listUsers(Model model) {
         List<User> users = userService.getAllUsers();
-        
+
+        int activeCount = users.stream().filter(u -> u.isActive()).toList().size();
+        int inactiveCount = users.stream().filter(u -> !u.isActive()).toList().size();
+        int agentCount = users.stream().filter(u -> u.getRole() == User.Role.AGENT).toList().size();
+
         addCommonAttributes(model);
         model.addAttribute("users", users);
         model.addAttribute(TITLE, "User Management");
         model.addAttribute(ROLES, User.Role.values());
         model.addAttribute("getRoleClass", (java.util.function.Function<User.Role, String>) this::getRoleClass);
+        model.addAttribute("activeCount", activeCount);
+        model.addAttribute("inactiveCount", inactiveCount);
+        model.addAttribute("agentCount", agentCount);
         
         return "admin/users";
     }

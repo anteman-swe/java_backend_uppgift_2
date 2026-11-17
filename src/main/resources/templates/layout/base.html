@@ -12,8 +12,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Heroicons for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Hero icons for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body class="bg-gray-50 min-h-screen">
     <nav class="bg-gray-800 text-white shadow-lg">
@@ -32,8 +34,8 @@
                         <a th:href="@{/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                             My Tickets
                         </a>
-                        <a th:if="${#authorization.expression('hasRole(''AGENT'')')}" th:href="@{/agent/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
-                            All Tickets
+                        <a th:if="${#authorization.expression('hasRole(''AGENT'')') || #authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/agent/tickets}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
+                            All tickets
                         </a>
                         <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                             Users
@@ -47,7 +49,7 @@
                         <div class="relative">
                             <button type="button" class="flex items-center space-x-2 bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button">
                                 <i class="fas fa-user-circle"></i>
-<!--                                <span th:text="${#authentication.principal.getUser().getUsername()}"></span>-->
+                                <span th:text="${#authentication.principal.fullName}"></span>
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             
@@ -55,11 +57,11 @@
                             <div class="absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" id="user-menu">
                                 <div class="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
                                     <i class="fas fa-user mr-2"></i>
-<!--                                    <span th:text="${#authentication.principal.getUser().getFullName()}"></span>-->
+                                    <span th:text="${#authentication.principal.fullName}"></span>
                                 </div>
                                 <div class="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
                                     <i class="fas fa-tag mr-2"></i>
-<!--                                    <span th:text="${#authentication.principal.getUser().getRole()}"></span>-->
+                                    <span th:text="${#authentication.principal.role}"></span>
                                 </div>
                                 <form th:action="@{/logout}" method="post" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <button type="submit" class="w-full text-left">
@@ -69,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-<!--                    <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">-->
+                    <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 hover:text-white transition-colors">
                         <i class="fas fa-sign-in-alt mr-1"></i> Login
                     </a>
                 </div>
@@ -95,14 +97,14 @@
                 <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     Users
                 </a>
-<!--                <div th:if="${#authentication.principal != null}" class="border-t border-gray-700 pt-4">-->
+                <div th:if="${#authentication.principal != null}" class="border-t border-gray-700 pt-4">
                     <div class="px-3 py-2 text-sm text-gray-400">
                         <i class="fas fa-user mr-2"></i>
-<!--                        <span th:text="${#authentication.principal.getUser().getFullName()}"></span>-->
+                        <span th:text="${#authentication.principal.fullName}"></span>
                     </div>
                     <div class="px-3 py-2 text-sm text-gray-400">
                         <i class="fas fa-tag mr-2"></i>
-<!--                        <span th:text="${#authentication.principal.getUser().getRole()}"></span>-->
+                        <span th:text="${#authentication.principal.role}"></span>
                     </div>
                     <form th:action="@{/logout}" method="post" class="block px-3 py-2">
                         <button type="submit" class="w-full text-left text-sm text-gray-300 hover:text-white">
@@ -110,7 +112,7 @@
                         </button>
                     </form>
                 </div>
-<!--                <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">-->
+                <a th:if="${#authentication.principal == null}" th:href="@{/login}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">
                     <i class="fas fa-sign-in-alt mr-1"></i> Login
                 </a>
             </div>

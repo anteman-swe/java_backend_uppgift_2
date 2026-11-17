@@ -1,196 +1,200 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"
+      lang="en"
+      xml:lang="en">
 <head>
     <title th:text="${title}">Ticket Details</title>
 </head>
 <body>
-    <div layout:fragment="content">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Main Content -->
-            <div class="lg:col-span-2">
-                <!-- Ticket Header -->
-                <div class="bg-white rounded-lg shadow mb-6">
-                    <div class="p-6 border-b border-gray-200">
-                        <div class="flex justify-between items-start">
-                            <h2 class="text-2xl font-bold text-gray-800" th:text="${ticket.title}"></h2>
-                            <span th:class="${'px-3 py-1 text-sm font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
-                                  th:text="${ticket.status}"></span>
-                        </div>
+<div layout:fragment="content">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+            <!-- Ticket Header -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <h2 class="text-2xl font-bold text-gray-800" th:text="${ticket.title}">Ticket Title</h2>
+                        <span th:class="${'px-3 py-1 text-sm font-semibold rounded-full ' + (@formatUtils.getTicketStatusClass(ticket.status))}"
+                              th:text="${ticket.status}"></span>
                     </div>
-                    <div class="p-6">
-                        <!-- Ticket Metadata -->
-                        <div class="flex flex-wrap gap-2 mb-6">
+                </div>
+                <div class="p-6">
+                    <!-- Ticket Metadata -->
+                    <div class="flex flex-wrap gap-2 mb-6">
                             <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
                                 <i class="fas fa-user mr-1"></i>
                                 <span th:text="${ticket.createdBy.getFullName()}"></span>
                             </span>
-                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
                                 <i class="fas fa-calendar mr-1"></i>
                                 <span th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                             </span>
-                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full" th:if="${ticket.category}">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full" th:if="${ticket.category}">
                                 <i class="fas fa-tag mr-1"></i>
                                 <span th:text="${ticket.category}"></span>
                             </span>
-                            <span th:class="${'px-3 py-1 text-sm font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
-                                  th:text="${ticket.priority}"></span>
-                        </div>
-                        
-                        <!-- Ticket Description -->
-                        <div class="mb-6">
-                            <h5 class="text-lg font-medium text-gray-800 mb-2">Description</h5>
-                            <p class="text-gray-600 whitespace-pre-wrap" th:utext="${ticket.description}"></p>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex space-x-2 mb-6" th:if="${isOwner || isAgent || isAdmin}">
-                            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}" 
-                               class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-edit mr-1"></i> Edit
-                            </a>
-                            <form th:action="@{/tickets/{id}/change-status(id=${ticket.id})}" method="post" class="flex items-center">
-                                <select name="status" class="px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option th:each="status : ${statuses}" 
-                                            th:value="${status}" 
-                                            th:text="${status}"
-                                            th:selected="${ticket.status == status}"></option>
-                                </select>
-                                <button type="submit" class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                            </form>
-                        </div>
+                        <span th:class="${'px-3 py-1 text-sm font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
+                              th:text="${ticket.priority}"></span>
                     </div>
-                </div>
 
-                <!-- Comments Section -->
-                <div class="bg-white rounded-lg shadow">
-                    <div class="p-6 border-b border-gray-200">
-                        <h4 class="text-lg font-bold text-gray-800">Comments</h4>
+                    <!-- Ticket Description -->
+                    <div class="mb-6">
+                        <h5 class="text-lg font-medium text-gray-800 mb-2">Description</h5>
+                        <p class="text-gray-600 whitespace-pre-wrap" th:utext="${ticket.description}"></p>
                     </div>
-                    <div class="p-6">
-                        <!-- Comments List -->
-                        <div class="space-y-6">
-                            <div th:each="comment : ${comments}" class="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
-                                <div class="flex gap-4">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                            <i class="fas fa-user text-blue-600"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <h6 class="font-medium text-gray-800" th:text="${comment.user.getFullName()}"></h6>
-                                            <small class="text-gray-500 text-sm" 
-                                                   th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
-                                        </div>
-                                        <p class="text-gray-600" th:utext="${comment.content}"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div th:if="${comments.empty}" class="text-center py-6">
-                                <p class="text-gray-500">No comments yet</p>
-                            </div>
-                        </div>
 
-                        <!-- Add Comment Form -->
-                        <div th:if="${canComment}" class="mt-6">
-                            <form th:action="@{/tickets/{id}/add-comment(id=${ticket.id})}" method="post">
-                                <div class="mb-4">
-                                    <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Add a comment
-                                    </label>
-                                    <textarea id="content" name="content" 
-                                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                              rows="3" placeholder="Enter your comment..." required></textarea>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                        <i class="fas fa-paper-plane mr-2"></i> Post Comment
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-2 mb-6" th:if="${isOwner || isAgent || isAdmin}">
+                        <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}"
+                           class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </a>
+                        <form th:action="@{/tickets/{id}/change-status(id=${ticket.id})}" method="post" class="flex items-center">
+                            <select name="status" class="px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option th:each="status : ${statuses}"
+                                        th:value="${status}"
+                                        th:text="${status}"
+                                        th:selected="${ticket.status == status}"></option>
+                            </select>
+                            <button type="submit" class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="lg:col-span-1">
-                <div class="sticky top-6">
-                    <!-- Ticket Information Card -->
-                    <div class="bg-white rounded-lg shadow mb-6">
-                        <div class="p-6 border-b border-gray-200">
-                            <h5 class="text-lg font-bold text-gray-800">Ticket Information</h5>
+            <!-- Comments Section -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <h4 class="text-lg font-bold text-gray-800">Comments</h4>
+                </div>
+                <div class="p-6">
+                    <!-- Comments List -->
+                    <div class="space-y-6">
+                        <div th:each="comment : ${comments}" class="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-user text-blue-600"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <h6 class="font-medium text-gray-800" th:text="${comment.user.getFullName()}"></h6>
+                                        <small class="text-gray-500 text-sm"
+                                               th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                                    </div>
+                                    <p class="text-gray-600" th:utext="${comment.content}"></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-6">
-                            <dl class="space-y-4">
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Created By:</dt>
-                                    <dd class="text-sm text-gray-800" th:text="${ticket.createdBy.getFullName()}"></dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Created:</dt>
-                                    <dd class="text-sm text-gray-800" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Last Updated:</dt>
-                                    <dd class="text-sm text-gray-800" th:text="${#temporals.format(ticket.lastModified, 'yyyy-MM-dd HH:mm')}"></dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Assigned To:</dt>
-                                    <dd class="text-sm text-gray-800">
-                                        <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
-                                        <span th:if="${!ticket.assignedTo}" class="text-gray-500">Unassigned</span>
-                                    </dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Status:</dt>
-                                    <dd class="text-sm">
-                                        <span th:class="${'px-2 py-1 text-xs font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
+
+                        <!-- Fixed empty list check -->
+                        <div th:if="${comments == null || comments.isEmpty()}" class="text-center py-6">
+                            <p class="text-gray-500">No comments yet</p>
+                        </div>
+                    </div>
+
+                    <!-- Add Comment Form -->
+                    <div th:if="${canComment}" class="mt-6">
+                        <form th:action="@{/tickets/{id}/add-comment(id=${ticket.id})}" method="post">
+                            <div class="mb-4">
+                                <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Add a comment
+                                </label>
+                                <textarea id="content" name="content"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                          rows="3" placeholder="Enter your comment..." required></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                    <i class="fas fa-paper-plane mr-2"></i> Post Comment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="sticky top-6">
+                <!-- Ticket Information Card -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="p-6 border-b border-gray-200">
+                        <h5 class="text-lg font-bold text-gray-800">Ticket Information</h5>
+                    </div>
+                    <div class="p-6">
+                        <dl class="space-y-4">
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Created By:</dt>
+                                <dd class="text-sm text-gray-800" th:text="${ticket.createdBy.getFullName()}"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Created:</dt>
+                                <dd class="text-sm text-gray-800" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Last Updated:</dt>
+                                <dd class="text-sm text-gray-800" th:text="${#temporals.format(ticket.lastModified, 'yyyy-MM-dd HH:mm')}"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Assigned To:</dt>
+                                <dd class="text-sm text-gray-800">
+                                    <span th:if="${ticket.assignedTo}" th:text="${ticket.assignedTo.getFullName()}"></span>
+                                    <span th:unless="${ticket.assignedTo}" class="text-gray-500">Unassigned</span>
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Status:</dt>
+                                <dd class="text-sm">
+                                        <span th:class="${'px-2 py-1 text-xs font-semibold rounded-full ' + (@formatUtils.getTicketStatusClass(ticket.status))}"
                                               th:text="${ticket.status}"></span>
-                                    </dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-sm font-medium text-gray-500">Priority:</dt>
-                                    <dd class="text-sm">
-                                        <span th:class="${'px-2 py-1 text-xs font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Priority:</dt>
+                                <dd class="text-sm">
+                                        <span th:class="${'px-2 py-1 text-xs font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
                                               th:text="${ticket.priority}"></span>
-                                    </dd>
-                                </div>
-                            </dl>
-                        </div>
+                                </dd>
+                            </div>
+                        </dl>
                     </div>
+                </div>
 
-                    <!-- Assign/Unassign Buttons -->
-                    <div class="mb-6" th:if="${isAgent && !ticket.assignedTo}">
-                        <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post">
-                            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-user-check mr-2"></i> Assign to Me
-                            </button>
-                        </form>
-                    </div>
+                <!-- Assign/Unassign Buttons (Safeguarded against null pointer and handles unassigned tickets properly) -->
+                <div class="mb-6" th:if="${ticket.assignedTo == null || ticket.assignedTo.id != #authentication.principal.getId()}">
+                    <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}" method="post">
+                        <button th:unless="${#authorization.expression('hasRole(''USER'')')}" type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            <i class="fas fa-user-check mr-2"></i> Assign to Me
+                        </button>
+                    </form>
+                </div>
 
-                    <div class="mb-6" th:if="${isAgent && ticket.assignedTo && ticket.assignedTo.id == #authentication.principal.getUser().id}">
-                        <form th:action="@{/agent/tickets/{id}/unassign(id=${ticket.id})}" method="post">
-                            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-user-times mr-2"></i> Unassign
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Back to Tickets Button -->
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <a th:href="@{/tickets}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Back to Tickets
-                            </a>
-                        </div>
+                <div class="mb-6" th:if="${ticket.assignedTo != null && ticket.assignedTo.id == #authentication.principal.getId()}">
+                    <form th:action="@{/agent/tickets/{id}/unassign(id=${ticket.id})}" method="post">
+                        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            <i class="fas fa-user-times mr-2"></i> Unassign
+                        </button>
+                    </form>
+                </div>
+                <!-- Back to Tickets Button -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <a th:href="@{/tickets}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Tickets
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

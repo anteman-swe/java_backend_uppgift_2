@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="mb-6" th:if="${isAgent}">
+        <div class="mb-6" th:if="${#authorization.expression('hasRole(''AGENT'')')}">
             <div class="bg-white rounded-lg shadow p-6">
                 <h5 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h5>
                 <div class="flex space-x-2">
@@ -55,11 +55,11 @@
                                 <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="text-indigo-600 hover:text-indigo-900 font-medium" th:text="${ticket.title}"></a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketStatusClass(ticket.status))}"
                                       th:text="${ticket.status}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
                                       th:text="${ticket.priority}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
@@ -68,7 +68,7 @@
                                    class="text-indigo-600 hover:text-indigo-900 mr-2">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a th:if="${!isAgent}" 
+                                <a th:if="${!#authorization.expression('hasRole(''AGENT'')')}"
                                    th:href="@{/tickets/{id}/edit(id=${ticket.id})}" 
                                    class="text-gray-400 hover:text-gray-600">
                                     <i class="fas fa-edit"></i>
