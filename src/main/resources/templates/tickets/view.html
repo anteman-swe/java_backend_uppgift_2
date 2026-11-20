@@ -52,7 +52,7 @@
                            class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors">
                             <i class="fas fa-edit mr-1"></i> Edit
                         </a>
-                        <form th:action="@{/tickets/{id}/change-status(id=${ticket.id})}" method="post" class="flex items-center">
+                        <form th:if="${isAdmin || isAgent}" th:action="@{/tickets/{id}/change-status(id=${ticket.id})}" method="post" class="flex items-center">
                             <select name="status" class="px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option th:each="status : ${statuses}"
                                         th:value="${status}"
@@ -63,6 +63,7 @@
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </form>
+                        <p th:if="${isOwner}" th:text="${ticket.status}" class="px-3 py-2 border border-gray-300 rounded-md text-sm"></p>
                     </div>
                 </div>
             </div>

@@ -28,7 +28,7 @@ public class Ticket {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="status")
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Status status = Status.NEW;

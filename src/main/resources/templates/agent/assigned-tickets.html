@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"
+      lang="en"
+      xml:lang="en">
 <head>
     <title th:text="${title}">My Assigned Tickets</title>
 </head>
@@ -36,11 +40,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ticket.createdBy.getFullName()}"></td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.status == 'NEW' ? 'bg-blue-100 text-blue-800' : ticket.status == 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : ticket.status == 'WAITING_FOR_USER' ? 'bg-cyan-100 text-cyan-800' : ticket.status == 'RESOLVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketStatusClass(ticket.status))}"
                                       th:text="${ticket.status}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (ticket.priority == 'LOW' ? 'bg-green-100 text-green-800' : ticket.priority == 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : ticket.priority == 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')}"
+                                <span th:class="${'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + (@formatUtils.getTicketPriorityClass(ticket.priority))}"
                                       th:text="${ticket.priority}"></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
@@ -57,7 +61,7 @@
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${tickets.empty}">
+                        <tr th:if="${tickets.isEmpty()}">
                             <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                 You have no assigned tickets
                             </td>
