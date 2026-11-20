@@ -5,6 +5,7 @@ import com.example.helpdesk.repository.UserRepository;
 import com.example.helpdesk.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,20 +98,14 @@ public class UserService {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
-        
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof CustomUserDetails) {
-            return ((CustomUserDetails) principal).user();
-        }
-        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
-            return userRepository.findByUsername(
-                    ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername()).orElse(null);
-        }
-        if (principal instanceof String && !"anonymousUser".equals(principal)) {
-            return userRepository.findByUsername((String) principal).orElse(null);
-        }
 
-        return null;
+        return switch (authentication.getPrincipal()) {
+            case CustomUserDetails(User user) -> user;
+            case UserDetails userDetails -> userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+            case String username when !"anonymousUser".equals(username) ->
+                    userRepository.findByUsername(username).orElse(null);
+            case null, default -> null;
+        };
     }
 
     public boolean isCurrentUserAdmin() {
