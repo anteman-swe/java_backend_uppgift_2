@@ -57,6 +57,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with e-mail: " + email));
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -96,12 +101,15 @@ public class UserService {
         Object principal = authentication.getPrincipal();
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).user();
-        } else if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
-            return userRepository.findByUsername(((org.springframework.security.core.userdetails.UserDetails) principal).getUsername()).orElse(null);
-        } else if (principal instanceof String && !"anonymousUser".equals(principal)) {
+        }
+        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+            return userRepository.findByUsername(
+                    ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername()).orElse(null);
+        }
+        if (principal instanceof String && !"anonymousUser".equals(principal)) {
             return userRepository.findByUsername((String) principal).orElse(null);
         }
-        
+
         return null;
     }
 
@@ -113,15 +121,5 @@ public class UserService {
     public boolean isCurrentUserAgent() {
         User user = getCurrentUser();
         return user != null && (user.getRole() == User.Role.AGENT || user.getRole() == User.Role.ADMIN);
-    }
-
-    public boolean isCurrentUser(User user) {
-        User currentUser = getCurrentUser();
-        return currentUser != null && currentUser.getId().equals(user.getId());
-    }
-
-    public boolean canUserAccessTicket(User user, Long ticketId) {
-        // Implementation will be in TicketService
-        return true;
     }
 }

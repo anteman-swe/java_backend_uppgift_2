@@ -26,7 +26,7 @@ public class AdminController extends BaseController {
     public String listUsers(Model model) {
         List<User> users = userService.getAllUsers();
 
-        int activeCount = users.stream().filter(u -> u.isActive()).toList().size();
+        int activeCount = users.stream().filter(User::isActive).toList().size();
         int inactiveCount = users.stream().filter(u -> !u.isActive()).toList().size();
         int agentCount = users.stream().filter(u -> u.getRole() == User.Role.AGENT).toList().size();
 
@@ -74,20 +74,20 @@ public class AdminController extends BaseController {
             model.addAttribute(ROLES, User.Role.values());
             model.addAttribute(IS_EDIT, false);
             return "admin/user-form";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException _) {
             // Username doesn't exist, continue
         }
         
         // Check if email already exists
         try {
-            userService.getUserByUsername(user.getEmail());
+            userService.getUserByEmail(user.getEmail());
             bindingResult.rejectValue("email", "error.user", "Email already exists");
             addCommonAttributes(model);
             model.addAttribute(TITLE, NEW_USER);
             model.addAttribute(ROLES, User.Role.values());
             model.addAttribute(IS_EDIT, false);
             return "admin/user-form";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException _) {
             // Email doesn't exist, continue
         }
         

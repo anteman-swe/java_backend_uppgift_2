@@ -136,8 +136,6 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + ticketId));
         
-        User currentUser = userService.getCurrentUser();
-        
         if (!userService.isCurrentUserAgent()) {
             throw new RuntimeException("Only agents can unassign tickets");
         }
@@ -153,7 +151,7 @@ public class TicketService {
         
         User currentUser = userService.getCurrentUser();
         
-        if (!isUserAuthorizedForTicket(currentUser, ticket)) {
+        if (!currentUser.getRole().equals(User.Role.AGENT)) {
             throw new RuntimeException("Not authorized to change status of this ticket");
         }
         

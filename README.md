@@ -26,15 +26,15 @@ A comprehensive helpdesk/ticket management system built with Java Spring Boot, S
 
 ## Technology Stack
 
-- **Java 17**
-- **Spring Boot 3.2.0**
+- **Java 25**
+- **Spring Boot 4.1.2**
 - **Spring Security** - Authentication and authorization
 - **Spring Data JPA** - Database operations
 - **PostgreSQL** - Database
 - **Thymeleaf** - Server-side templating
-- **Bootstrap 5** - Frontend styling
+- **Tailwind CSS** - Frontend styling
 - **Maven** - Build tool
-- **Docker** - Containerization
+- **Podman** - Containerization
 
 ## Project Structure
 
@@ -54,8 +54,8 @@ helpdesk/
 │   │       ├── static/              # Static files (CSS, JS)
 │   │       └── templates/           # Thymeleaf templates
 │   └── test/                        # Test classes
-├── docker-compose.yml               # Docker Compose configuration
-├── Dockerfile                       # Docker configuration
+├── compose.yml               # Docker Compose configuration
+├── Containerfile                       # Docker configuration
 └── pom.xml                          # Maven configuration
 ```
 
@@ -75,8 +75,10 @@ helpdesk/
 git clone https://github.com/anteman-swe/java_backend_uppgift_2.git
 cd java_backend_uppgift_2
 
-# Start the application with Docker Compose
-docker-compose up -d
+# Start the application with Docker Compose or Podman Compose
+docker compose up -d 
+# or
+podman compose up -d
 
 # The application will be available at http://localhost:8080
 ```
