@@ -43,8 +43,12 @@ public class TicketService {
         ticket.setDescription(ticketDetails.getDescription());
         ticket.setCategory(ticketDetails.getCategory());
         ticket.setPriority(ticketDetails.getPriority());
-        changeTicketStatus(ticket.getId(), ticketDetails.getStatus());
-        
+
+        // Only agents can change the status
+        if (userService.isCurrentUserAgent()) {
+            changeTicketStatus(ticket.getId(), ticketDetails.getStatus());
+        }
+
         return ticketRepository.save(ticket);
     }
 
