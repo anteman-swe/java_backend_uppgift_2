@@ -149,7 +149,7 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + ticketId));
         
-        if (!userService.isCurrentUserAgent() || !userService.isCurrentUserAdmin()) {
+        if (!userService.isCurrentUserAgent()) {
             throw new RuntimeException("Not authorized to change status of this ticket");
         }
         
