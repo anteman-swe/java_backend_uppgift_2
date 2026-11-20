@@ -4,6 +4,7 @@ import com.example.helpdesk.entity.Ticket;
 import com.example.helpdesk.entity.User;
 import com.example.helpdesk.repository.TicketRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    @Transactional
     public Ticket updateTicket(Long id, Ticket ticketDetails) {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + id));
