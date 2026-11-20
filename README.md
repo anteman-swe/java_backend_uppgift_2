@@ -68,7 +68,7 @@ helpdesk/
   *or* 
 - Podman and Podman Compose (podman-compose)
 
-### Option 1: Run with Docker Compose (Recommended)
+### Option 1: Run with Docker or Podman Compose (Recommended)
 
 ```bash
 # Clone the repository
@@ -87,7 +87,9 @@ podman compose up -d
 
 1. **Start PostgreSQL database:**
    ```bash
-   docker-compose up -d postgres
+   docker compose up -d postgres
+   # or
+   podman compose up -d postgres
    ```
 
 2. **Build and run the application:**
@@ -315,7 +317,7 @@ The application includes sample data that is loaded on first startup. You can te
 - Verify credentials in `application.properties`
 
 ### Application Not Starting
-- Check logs: `docker-compose logs app`
+- Check logs: `docker compose logs app`
 - Build manually: `mvn clean package`
 - Check Java version: `java -version`
 
@@ -336,13 +338,19 @@ mvn test
 mvn clean package -DskipTests
 ```
 
-### Running with Docker
+### Running with Docker or Podman
 ```bash
 # Build the image
 docker build -t helpdesk-app .
+# or
+podman build -t helpdesk-app .
 
 # Run the container
-docker run -p 8080:8080 --network=host helpdesk-app
+docker run -p 8080:8080 --network=host
+ helpdesk-app
+ # or
+podman run -p 8080:8080 --network=host
+ helpdesk-app
 ```
 
 ## License

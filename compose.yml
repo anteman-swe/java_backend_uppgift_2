@@ -22,7 +22,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Containerfile
     container_name: helpdesk-app
     depends_on:
       postgres:
