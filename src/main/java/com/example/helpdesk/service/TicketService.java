@@ -46,7 +46,7 @@ public class TicketService {
 
         // Only agents can change the status
         if (userService.isCurrentUserAgent()) {
-            changeTicketStatus(ticket.getId(), ticketDetails.getStatus());
+            ticket.setStatus(ticketDetails.getStatus());
         }
 
         return ticketRepository.save(ticket);
