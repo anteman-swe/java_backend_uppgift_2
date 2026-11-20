@@ -44,6 +44,7 @@ public class TicketService {
         ticket.setCategory(ticketDetails.getCategory());
         ticket.setPriority(ticketDetails.getPriority());
         ticket.setStatus(ticketDetails.getStatus());
+        changeTicketStatus(ticket.getId(), ticketDetails.getStatus());
         
         return ticketRepository.save(ticket);
     }
